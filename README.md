@@ -104,6 +104,11 @@ Nos templates, escolha `BASE_NAME`; ao copiá-los, use `modelo-grupo.ipynb`.
 Os templates ainda exigem suas tarefas de modelagem, sobretudo o Holt-Winters,
 cujo ajuste em séries com lacunas precisa ser definido na T09.
 
+`grupo1/holt-winters-1.ipynb`, incorporado da `main`, preserva uma análise
+**mensal exploratória** do Bitcoin a partir do Excel tratado. Seus resultados
+não substituem o pipeline diário 70%/30% definido para o Grupo 1; essa
+adaptação de T09 permanece pendente.
+
 ### Regras e limites do tratamento
 
 - Datas inválidas são removidas e contadas; datas válidas ficam em ordem.

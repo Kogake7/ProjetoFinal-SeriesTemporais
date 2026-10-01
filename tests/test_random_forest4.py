@@ -6,6 +6,7 @@ import unittest
 
 import numpy as np
 import pandas as pd
+from features_temporais import construir_features_temporais
 
 
 class TestFeaturesRandomForest4(unittest.TestCase):
@@ -23,7 +24,7 @@ class TestFeaturesRandomForest4(unittest.TestCase):
                     'construir_features_temporais', 'maior_trecho_continuo'
                 }:
                     exec(compile(ast.Module(body=[node], type_ignores=[]), '<notebook>', 'exec'), scope)
-        cls.criar = staticmethod(scope['construir_features_temporais'])
+        cls.criar = staticmethod(construir_features_temporais)
         cls.trecho = staticmethod(scope['maior_trecho_continuo'])
 
     def fonte(self):
@@ -33,7 +34,8 @@ class TestFeaturesRandomForest4(unittest.TestCase):
     def test_lacunas_nao_comprimem_lags(self):
         dados = self.fonte()
         dados.iloc[200, 0] = np.nan
-        resultado = self.criar(dados, 'y', lags_alvo=[1, 24], lags_exogenas={}, janelas_moveis=[])
+        resultado = self.criar(dados, 'y', lags_alvo=[1, 24], lags_exogenas={},
+                              janelas_moveis=[], frequencia='h', remover_incompletos=True)
         self.assertNotIn(dados.index[201], resultado.index)
         self.assertNotIn(dados.index[224], resultado.index)
         self.assertEqual(resultado.loc[dados.index[202], 'target_lag_1'], 201.)
@@ -41,7 +43,8 @@ class TestFeaturesRandomForest4(unittest.TestCase):
 
     def test_futuro_nao_altera_features_da_origem(self):
         dados = self.fonte()
-        kwargs = dict(lags_alvo=[1, 24], lags_exogenas={'x': [1]}, janelas_moveis=[6, 24])
+        kwargs = dict(lags_alvo=[1, 24], lags_exogenas={'x': [1]}, janelas_moveis=[6, 24],
+                      frequencia='h', remover_incompletos=True)
         original = self.criar(dados, 'y', **kwargs)
         dados.iloc[250:] = 99999.
         alterado = self.criar(dados, 'y', **kwargs)

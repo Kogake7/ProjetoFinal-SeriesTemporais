@@ -63,11 +63,13 @@ def configuracao_features(nome: str) -> ConfiguracaoFeatures:
         raise ValueError(f'Base desconhecida: {nome!r}') from exc
 
 
-def _inteiros_positivos(valores: Sequence[int], nome: str, minimo: int) -> list[int]:
+def _inteiros_positivos(valores: Sequence[int], nome: str, minimo: int,
+                       *, permitir_vazio: bool = False) -> list[int]:
     valores = list(valores)
-    if not valores or any(isinstance(v, (bool, np.bool_)) or
-                          not isinstance(v, (int, np.integer)) or v < minimo
-                          for v in valores):
+    if (not valores and not permitir_vazio) or any(
+        isinstance(v, (bool, np.bool_)) or
+        not isinstance(v, (int, np.integer)) or v < minimo for v in valores
+    ):
         raise ValueError(f'{nome} deve conter inteiros >= {minimo}.')
     return sorted(set(valores))
 
@@ -105,7 +107,8 @@ def construir_features_temporais(
     if isinstance(horizonte, bool) or not isinstance(horizonte, (int, np.integer)) or horizonte < 1:
         raise ValueError('horizonte deve ser inteiro positivo.')
     la = _inteiros_positivos(lags_alvo, 'lags_alvo', horizonte)
-    jm = _inteiros_positivos(janelas_moveis, 'janelas_moveis', 2)
+    jm = _inteiros_positivos(janelas_moveis, 'janelas_moveis', 2,
+                            permitir_vazio=True)
     exog = dict(lags_exogenas)
     conhecidos = dict(indicadores_conhecidos or {})
     usadas = set(exog) | set(conhecidos)
