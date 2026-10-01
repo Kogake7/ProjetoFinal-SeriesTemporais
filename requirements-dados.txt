@@ -1,0 +1,4 @@
+# Dependências da preparação e leitura das bases (não inclui os modelos).
+pandas>=2.2
+numpy>=1.26
+openpyxl>=3.1
