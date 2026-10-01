@@ -143,12 +143,6 @@ adaptação de T09 permanece pendente.
 O diagnóstico das fontes e o resumo dos Excel tratados ficam no notebook
 `preparar-bases.ipynb`; os detalhes também constam nos metadados dos Excel.
 
-Verificação do tratamento (sem treinar os modelos):
-
-```bash
-python -m unittest discover -s tests -v
-```
-
 ## Validação das bases
 
 O arquivo `validacao_bases.py` centraliza o carregamento e as verificações das
