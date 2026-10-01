@@ -1,17 +1,17 @@
-"""Congelamento e validação sanitária das bases do projeto.
+"""Validação sanitária das fontes originais das cinco bases do projeto.
 
-O módulo não corrige nem sobrescreve os dados brutos. Ele oferece duas etapas:
+O módulo não corrige nem sobrescreve os dados brutos. O fluxo atual usa
+``validar_todas_bases`` diretamente nas pastas dos grupos. As funções de
+snapshot permanecem disponíveis para compatibilidade, mas a preparação T01 não
+as chama e não cria uma segunda cópia das fontes.
 
-1. ``congelar_bases`` copia as cinco fontes para um diretório de snapshot e cria
-   um manifesto com hashes SHA-256;
-2. ``validar_todas_bases`` verifica nulos, duplicatas, datas e a frequência
-   temporal esperada de cada fonte.
+``validar_todas_bases`` verifica nulos, duplicatas, datas e a frequência
+temporal esperada de cada fonte.
 
 Exemplo de uso em um notebook::
 
-    from validacao_bases import congelar_bases, validar_todas_bases
+    from validacao_bases import validar_todas_bases
 
-    congelar_bases("dados_congelados/v1")
     relatorios = validar_todas_bases()
     relatorios["bitcoin"].to_dict()
 """
