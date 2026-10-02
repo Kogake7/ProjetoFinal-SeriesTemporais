@@ -54,7 +54,17 @@ de seis meses. O teste final ocupa os últimos 20% da grade e não participa da
 seleção. A floresta é ajustada uma vez; as entradas são atualizadas hora a hora
 para prever a próxima hora. A amostra mensal de 10% é um subconjunto do mesmo
 teste, calculada apenas para comparar a estabilidade do MAE. Os resultados
-numéricos atuais se referem somente ao Grupo 4.
+dessa busca de hiperparâmetros se referem somente ao Grupo 4.
+
+## Random Forest nos demais grupos
+
+Os notebooks `grupo1/random-forest-1.ipynb`, `grupo2/random-forest-2.ipynb`,
+`grupo3/random-forest-3.ipynb` e `grupo5/random-forest-5.ipynb` aplicam o
+pipeline compartilhado aos respectivos Excel tratados. Eles guardam no próprio
+notebook uma primeira execução com parâmetros fixos, comparação com persistência,
+cobertura do teste, gráficos e importância por permutação. A busca de
+hiperparâmetros por base e o protocolo walk-forward final da equipe ainda
+precisam ser definidos; esses resultados são referências iniciais.
 
 ## Fluxo único de preparação (T01)
 
