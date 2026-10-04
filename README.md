@@ -60,8 +60,12 @@ comparáveis dos quatro modelos por base.
 |---|---|---|
 | Random Forest | `random-forest-1.ipynb` a `random-forest-5.ipynb`, em `grupo1/` a `grupo5/` | Cinco execuções com busca temporal, teste e métricas. Há experimentos de cobertura adicionais nos grupos 2 e 3. |
 | Holt-Winters | `grupo1/holt-winters-1.ipynb` | Protótipo mensal de Bitcoin; ainda precisa do protocolo diário comum. Grupos 2–5 sem pipeline concluído. |
-| SARIMAX | `grupo4/sarimax-4.ipynb` | Execução exploratória com tratamento próprio da fonte. Alvo e datas coincidem com o Excel comum, mas a preparação das exógenas difere; falta reproduzir o fluxo T01 comum. Grupos 1–3 e 5 sem pipeline concluído. |
-| MLP Regressor | `grupo4/mlp-regressor-4.ipynb` | Código em preparação, sem execução final salva. Grupos 1–3 e 5 sem pipeline concluído. |
+| SARIMAX | `sarimax-1.ipynb` a `sarimax-5.ipynb` | Grupos 1, 4 e 5 executados. O grupo 4 usa preparação própria das exógenas e teve avisos de não convergência. O grupo 2 parou no orçamento da busca e o 3 ainda não foi executado; ambos precisam preservar as lacunas horárias para não comprimir a série. |
+| MLP Regressor | `mlp-regressor-1.ipynb` a `mlp-regressor-5.ipynb` | Cinco notebooks integrados da `main` e executados na `dev`. Os grupos 1 e 5 preveem a variação sobre o último valor observado para lidar com a tendência dos preços. |
+
+As revisões dos MLPs 1 e 5 foram feitas após inspecionar o erro no teste.
+Seus MAEs revisados são exploratórios e precisam dessa ressalva no relatório;
+os hiperparâmetros de cada revisão continuam selecionados nos folds do treino.
 
 O RF usa um modelo ajustado no treino e atualiza as **entradas** a cada previsão
 de um passo; isso é avaliação de origem móvel, sem reajustar a floresta a cada
