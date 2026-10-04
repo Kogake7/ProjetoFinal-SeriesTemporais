@@ -1,11 +1,11 @@
-"""T08: protocolo walk-forward comum aos 20 pipelines.
+"""T08: corte, horizonte e origens de avaliação comuns por base.
 
 Regra única para as cinco bases:
 
 - corte cronológico vindo de ``dados_tratados`` (``inicio_teste`` dos metadados);
 - horizonte de 1 passo (dia, hora ou semana, conforme a base);
 - origens de teste = timestamps do teste com alvo e features completos,
-  segundo ``preparar_features_base`` (mesma máscara de RF, MLP e SARIMAX);
+  segundo ``preparar_features_base``; cada modelo deve usar essas datas;
 - features só com informação até ``t-1``; escalonadores e hiperparâmetros
   ajustados apenas no histórico.
 
@@ -66,6 +66,8 @@ def protocolo(base: str, raiz: str | Path = RAIZ_PROJETO) -> dict:
         "horizonte": HORIZONTE,
         "n_treino": int((dados.index < inicio).sum()),
         "n_origens": len(origens),
+        "n_grade_teste": meta["linhas_teste"],
+        "cobertura_grade_pct": 100 * len(origens) / meta["linhas_teste"],
         "primeira_origem": origens.min(),
         "ultima_origem": origens.max(),
     }
@@ -100,11 +102,13 @@ def validar_previsoes(
         "origens_oficiais": len(oficiais),
         "previsoes": len(previstas),
         "duplicadas": int(previstas.duplicated().sum()),
+        "ordenadas": bool(previstas.is_monotonic_increasing),
         "faltando": len(oficiais.difference(previstas)),
         "fora_do_protocolo": len(previstas.difference(oficiais)),
     }
     resultado["ok"] = (
         resultado["duplicadas"] == 0
+        and resultado["ordenadas"]
         and resultado["faltando"] == 0
         and resultado["fora_do_protocolo"] == 0
     )

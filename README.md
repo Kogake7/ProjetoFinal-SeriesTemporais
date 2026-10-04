@@ -60,11 +60,21 @@ dessa busca de hiperparâmetros se referem somente ao Grupo 4.
 
 Os notebooks `grupo1/random-forest-1.ipynb`, `grupo2/random-forest-2.ipynb`,
 `grupo3/random-forest-3.ipynb` e `grupo5/random-forest-5.ipynb` aplicam o
-pipeline compartilhado aos respectivos Excel tratados. Eles guardam no próprio
-notebook uma primeira execução com parâmetros fixos, comparação com persistência,
-cobertura do teste, gráficos e importância por permutação. A busca de
-hiperparâmetros por base e o protocolo walk-forward final da equipe ainda
-precisam ser definidos; esses resultados são referências iniciais.
+pipeline compartilhado aos respectivos Excel tratados. Cada notebook contém
+busca temporal de hiperparâmetros no treino, parâmetros congelados, previsão
+no teste, comparação com persistência, cobertura, gráficos, ACF/Ljung-Box dos
+resíduos e importância por permutação. Nos grupos 1 e 5, a busca também compara
+prever o nível ou a variação sobre o valor anterior. Os cinco RFs usam o horizonte
+de um passo;
+os grupos 1, 2, 3 e 5 conferem suas datas de previsão com `walk_forward.py`.
+
+O notebook `t08_walk_forward.ipynb` documenta as datas elegíveis e as políticas
+de reajuste por modelo. `comparacao-20-modelos.ipynb` lê os resultados salvos
+nos notebooks de RF e mostra os demais experimentos ainda pendentes. O ranking
+final só será calculado quando os quatro modelos de cada base tiverem resultados
+comparáveis nas mesmas datas. O SARIMAX do Grupo 4, incorporado da `main`, foi
+executado com tratamento próprio da fonte; seus números precisam ser refeitos
+com o Excel tratado comum antes de entrar nessa comparação.
 
 ## Fluxo único de preparação (T01)
 
