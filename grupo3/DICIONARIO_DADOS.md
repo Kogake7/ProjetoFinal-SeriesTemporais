@@ -83,3 +83,16 @@ previsão perfeita.
 - **Condicionais:** previsões meteorológicas com emissão anterior à hora-alvo.
 - **Bloqueadas:** poluentes e meteorologia realizados na própria hora prevista.
 
+## Configuração atual do modelo
+
+- Fonte: UCI 501 — https://archive.ics.uci.edu/dataset/501/beijing+multi+site+air+quality+data
+- Random State: 42
+- Treino-teste: 80% / 20%, cronológico, sem embaralhamento.
+- Horizonte: 1 passo.
+
+As tabelas acima dizem o que é **permitido** pela disponibilidade temporal. Abaixo está o que está **selecionado** em `features_temporais.py` (`configuracao_features`):
+
+- Alvo `PM2.5`: lags 1, 2, 3, 6, 12, 24, 48 e 168 horas; janelas de 6, 24 e 168 horas até `t-1`.
+- Exógenas defasadas (lags 1 e 24): `PM10`, `SO2`, `NO2`, `CO`, `O3`, `TEMP`, `PRES`, `DEWP`, `RAIN`, `WSPM`. Correlação com o alvo não é leakage quando a medição já existia na origem.
+- Calendário em `t`: hora, dia da semana e dia do ano.
+- Fora da seleção atual: `wd` (categórica, sem encoding ajustado no treino), `No` e `station`.

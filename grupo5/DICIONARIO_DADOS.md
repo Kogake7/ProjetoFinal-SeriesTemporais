@@ -81,3 +81,15 @@ problema passa a ser nowcasting e precisa de avaliação própria.
   que está sendo prevista.
 - **Pendente:** confirmar série, moeda, unidade e horário de publicação.
 
+## Configuração atual do modelo
+
+- Fonte: GitHub — https://github.com/dengyishuo/quantitative-finance/blob/master/gold.daily.prices.csv
+- Random State: 42
+- Treino-teste: 75% / 25%, cronológico, sem embaralhamento.
+- Horizonte: 1 passo.
+
+As tabelas acima dizem o que é **permitido** pela disponibilidade temporal. Abaixo está o que está **selecionado** em `features_temporais.py` (`configuracao_features`):
+
+- Alvo `VALUE` semanal: lags 1, 2, 3, 4, 8, 13 e 26 semanas; janelas de 4, 8, 13 e 26 semanas até `t-1`.
+- Sem exógenas observadas.
+- Calendário em `t`: dia do ano (seno/cosseno). Número da semana e mês são permitidos, mas não estão na seleção atual.

@@ -95,3 +95,16 @@ mas exige atenção a multicolinearidade e à interpretação do modelo.
   origem da previsão e armazenada por versão.
 - **Bloqueadas:** quaisquer agregados realizados da própria hora prevista.
 
+## Configuração atual do modelo
+
+- Fonte: Kaggle — https://www.kaggle.com/datasets/pankrzysiu/weather-archive-jena
+- Random State: 42
+- Treino-teste: 80% / 20%, cronológico, sem embaralhamento.
+- Horizonte: 1 passo.
+
+As tabelas acima dizem o que é **permitido** pela disponibilidade temporal. Abaixo está o que está **selecionado** em `features_temporais.py` (`configuracao_features`):
+
+- Alvo `T (degC)`: lags 1, 2, 3, 6, 12, 24, 48 e 168 horas; janelas de 6, 24 e 168 horas até `t-1`.
+- Exógenas defasadas (lags 1 e 24): `p (mbar)`, `rh (%)`, `wv (m/s)` e direção do vento como `wd_sin`/`wd_cos`.
+- Calendário em `t`: hora, dia da semana e dia do ano.
+- Fora da seleção atual: `Tpot`, `Tdew`, `VPmax`, `VPact`, `VPdef`, `sh`, `H2OC`, `rho`, `max. wv` (permitidos defasados; excluídos por redundância com o alvo, não por leakage).
