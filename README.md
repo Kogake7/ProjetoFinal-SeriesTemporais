@@ -63,9 +63,12 @@ Os notebooks `grupo1/random-forest-1.ipynb`, `grupo2/random-forest-2.ipynb`,
 pipeline compartilhado aos respectivos Excel tratados. Cada notebook contém
 busca temporal de hiperparâmetros no treino, parâmetros congelados, previsão
 no teste, comparação com persistência, cobertura, gráficos, ACF/Ljung-Box dos
-resíduos e importância por permutação. Nos grupos 1 e 5, a busca também compara
-prever o nível ou a variação sobre o valor anterior. Os cinco RFs usam o horizonte
-de um passo;
+resíduos e importância por permutação. Nos grupos 1, 3 e 5, a busca também compara
+prever o nível ou a variação sobre o valor anterior. Nos grupos 2 e 3, a análise
+de cobertura no treino selecionou uma janela móvel causal de 6 horas: as janelas
+de 24 e 168 horas descartavam muitas datas com alvo observado. Esses notebooks
+mostram a validação da escolha e o MAE antes/depois nas mesmas datas, além da
+cobertura ampliada. Os cinco RFs usam o horizonte de um passo;
 os grupos 1, 2, 3 e 5 conferem suas datas de previsão com `walk_forward.py`.
 
 O notebook `t08_walk_forward.ipynb` documenta as datas elegíveis e as políticas
