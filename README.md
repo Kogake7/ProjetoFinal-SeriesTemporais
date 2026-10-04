@@ -71,6 +71,12 @@ mostram a validação da escolha e o MAE antes/depois nas mesmas datas, além da
 cobertura ampliada. Os cinco RFs usam o horizonte de um passo;
 os grupos 1, 2, 3 e 5 conferem suas datas de previsão com `walk_forward.py`.
 
+Os notebooks dos grupos 2 e 3 também comparam perfis mais curtos de lags para
+prever horas antes excluídas. Cada comparação mostra validação no treino, MAE
+nas datas comuns, MAE nas datas adicionais e uma alternativa híbrida que usa
+o RF atual onde há todas as features. Esse experimento ainda não altera as
+origens oficiais T08, usadas para comparar os quatro modelos de cada grupo.
+
 O notebook `t08_walk_forward.ipynb` documenta as datas elegíveis e as políticas
 de reajuste por modelo. `comparacao-20-modelos.ipynb` lê os resultados salvos
 nos notebooks de RF e mostra os demais experimentos ainda pendentes. O ranking
