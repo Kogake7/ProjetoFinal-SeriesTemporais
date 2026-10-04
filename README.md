@@ -1,234 +1,86 @@
-# ProjetoFinal-SeriesTemporais
+# Projeto final — Séries Temporais
 
-Projeto final de Séries Temporais contendo quatro modelos de previsão:
-SARIMAX, Holt-Winters, Random Forest e MLP Regressor (redes neurais), aplicados
-a cinco bases diferentes.
+O projeto compara **SARIMAX, Holt-Winters, Random Forest e MLP Regressor** em
+cinco bases: são 20 experimentos planejados. Cada previsão tem horizonte de um
+período (dia, hora ou semana, conforme a base). Os números, gráficos e resíduos
+de cada modelo ficam no próprio notebook.
 
-## Features compartilhadas (T06)
+## Bases e preparação
 
-`features_temporais.py` implementa o pipeline de atributos dos modelos de
-tabela. `configuracao_features(nome)` define lags, janelas e calendário iniciais
-para Bitcoin, tráfego, poluição, clima e ouro. `preparar_features_base` aplica a
-configuração correspondente; `construir_features_temporais` permite ajustes
-explícitos, sem duplicar a lógica nos notebooks. Os notebooks de RF e MLP do
-Grupo 4 já chamam esse módulo, assim como os respectivos templates.
+`preparar-bases.ipynb` e `preparacao_bases.py` geram **um Excel tratado por
+grupo** em `dados_tratados/`. O `manifesto.json` registra os hashes e os cortes;
+ele não é uma base adicional. As fontes originais permanecem nas pastas dos
+grupos. O alvo não é imputado: horas sem valor real continuam vazias para que a
+avaliação não use valores inventados.
 
-```python
-from preparacao_bases import carregar_base_tratada
-from features_temporais import preparar_features_base
+| Grupo | Série | Frequência | Seed | Treino / teste | Excel tratado |
+|---|---|---|---:|---:|---|
+| 1 | Bitcoin | Diária | 42 | 70% / 30% | `base-tratada-1.xlsx` |
+| 2 | Tráfego | Horária | 67 | 80% / 20% | `base-tratada-2.xlsx` |
+| 3 | Poluição | Horária | 42 | 80% / 20% | `base-tratada-3.xlsx` |
+| 4 | Clima | Horária | 42 | 80% / 20% | `base-tratada-4.xlsx` |
+| 5 | Ouro | Semanal (`W-FRI`) | 42 | 75% / 25% | `base-tratada-5.xlsx` |
 
-df, meta = carregar_base_tratada('clima')
-features = preparar_features_base(
-    df, 'clima', meta['alvo'], meta['frequencia'],
-    remover_incompletos=True,
-)
-treino = features.loc[features.index < meta['inicio_teste']]
-teste = features.loc[features.index >= meta['inicio_teste']]
-X_treino, y_treino = treino.drop(columns='target'), treino['target']
-```
-
-Os lags de alvo e exógenas são sempre de períodos anteriores; as médias e
-desvios móveis começam em `t-1`. O calendário do instante previsto é conhecido
-antecipadamente e recebe seno/cosseno cíclicos. Tráfego também recebe um
-indicador de feriado conhecido no calendário. Categorias meteorológicas ficam
-fora da configuração inicial porque precisariam de encoding ajustado no treino.
-Com `remover_incompletos=False` (padrão), a grade inteira e seus nulos são
-preservados para auditoria. Na modelagem, remova linhas incompletas **depois**
-de construir os lags e mantenha o corte temporal do Excel. O módulo não ajusta
-escala, imputação estatística, encoding aprendido ou modelo: essas etapas
-dependem das janelas de T07/T08. As configurações de lags são pontos de partida;
-qualquer escolha por desempenho deve usar apenas o treino.
-
-## Random Forest do Grupo 4
-
-Instale `requirements-random-forest.txt` e execute
-`grupo4/random-forest-4.ipynb` do início ao fim. O notebook consome o Excel
-tratado do Grupo 4 e guarda no próprio `.ipynb` a busca de hiperparâmetros,
-as previsões, MAE/RMSE/R², métricas mensais, dispersão dos erros, gráficos,
-Ljung-Box e importância das features. Ele não cria arquivos de resultados nem
-chama scripts auxiliares. As saídas da última execução permanecem incorporadas
-no notebook versionado.
-
-A seleção usa 12 combinações em três janelas expansivas de treino com validações
-de seis meses. O teste final ocupa os últimos 20% da grade e não participa da
-seleção. A floresta é ajustada uma vez; as entradas são atualizadas hora a hora
-para prever a próxima hora. A amostra mensal de 10% é um subconjunto do mesmo
-teste, calculada apenas para comparar a estabilidade do MAE. Os resultados
-dessa busca de hiperparâmetros se referem somente ao Grupo 4.
-
-## Random Forest nos demais grupos
-
-Os notebooks `grupo1/random-forest-1.ipynb`, `grupo2/random-forest-2.ipynb`,
-`grupo3/random-forest-3.ipynb` e `grupo5/random-forest-5.ipynb` aplicam o
-pipeline compartilhado aos respectivos Excel tratados. Cada notebook contém
-busca temporal de hiperparâmetros no treino, parâmetros congelados, previsão
-no teste, comparação com persistência, cobertura, gráficos, ACF/Ljung-Box dos
-resíduos e importância por permutação. Nos grupos 1, 3 e 5, a busca também compara
-prever o nível ou a variação sobre o valor anterior. Nos grupos 2 e 3, a análise
-de cobertura no treino selecionou uma janela móvel causal de 6 horas: as janelas
-de 24 e 168 horas descartavam muitas datas com alvo observado. Esses notebooks
-mostram a validação da escolha e o MAE antes/depois nas mesmas datas, além da
-cobertura ampliada. Os cinco RFs usam o horizonte de um passo;
-os grupos 1, 2, 3 e 5 conferem suas datas de previsão com `walk_forward.py`.
-
-Os notebooks dos grupos 2 e 3 também comparam perfis mais curtos de lags para
-prever horas antes excluídas. Cada comparação mostra validação no treino, MAE
-nas datas comuns, MAE nas datas adicionais e uma alternativa híbrida que usa
-o RF atual onde há todas as features. Esse experimento ainda não altera as
-origens oficiais T08, usadas para comparar os quatro modelos de cada grupo.
-
-O notebook `t08_walk_forward.ipynb` documenta as datas elegíveis e as políticas
-de reajuste por modelo. `comparacao-20-modelos.ipynb` lê os resultados salvos
-nos notebooks de RF e mostra os demais experimentos ainda pendentes. O ranking
-final só será calculado quando os quatro modelos de cada base tiverem resultados
-comparáveis nas mesmas datas. O SARIMAX do Grupo 4, incorporado da `main`, foi
-executado com tratamento próprio da fonte; seus números precisam ser refeitos
-com o Excel tratado comum antes de entrar nessa comparação.
-
-## Fluxo único de preparação (T01)
-
-Abra **`preparar-bases.ipynb`** na raiz. Ele lê os cinco arquivos originais já
-existentes em `grupo1/` a `grupo5/`, aplica o tratamento e publica **um Excel
-tratado por grupo** em `dados_tratados/`. Esses cinco Excel são a entrada comum
-dos modelos; não são criadas cópias adicionais das fontes.
-
-Para regenerar os mesmos cinco Excel após mudar dados ou regras:
+Para regenerar os Excel com as mesmas regras:
 
 ```bash
 pip install -r requirements-dados.txt
 python preparacao_bases.py --sobrescrever
 ```
 
-O pequeno `dados_tratados/manifesto.json` registra hashes das fontes e dos cinco
-Excel, regras, diagnósticos e o corte de treino/teste. Ele é metadado, não uma
-sexta base. Regenerar substitui os mesmos cinco arquivos; os resultados antigos
-dos modelos continuam identificados pelo hash da base usada em cada execução.
+Para executar os notebooks de Random Forest, instale também
+`requirements-random-forest.txt`.
 
-| Base / grupo | Frequência | Seed | Treino / teste | Excel |
-|---|---|---:|---|---|
-| Bitcoin / 1 | Diária | 42 | 70% / 30% | `base-tratada-1.xlsx` |
-| Tráfego / 2 | Horária | 67 | 80% / 20% | `base-tratada-2.xlsx` |
-| Poluição / 3 | Horária | 42 | 80% / 20% | `base-tratada-3.xlsx` |
-| Clima / 4 | Horária | 42 | 80% / 20% | `base-tratada-4.xlsx` |
-| Ouro / 5 | Semanal, sexta-feira | 42 | 75% / 25% | `base-tratada-5.xlsx` |
+Os `DICIONARIO_DADOS.md` de cada grupo descrevem as variáveis, suas unidades e
+quando cada medição fica disponível. `validacao_bases.py` audita as fontes;
+`features_temporais.py` constrói lags, janelas e calendário sem usar medições
+futuras. Os notebooks em `notebooks-base/` são pontos de partida, não resultados
+dos 20 experimentos.
 
-Cada Excel contém `dados` (grade temporal e medições) e `metadados` (origem,
-protocolo e diagnóstico). As colunas `_alvo_observado`, `_linha_completa` e
-`_particao` são controles; o carregador as remove das entradas dos modelos.
+## Protocolo e comparação
 
-```python
-import pandas as pd
-from preparacao_bases import carregar_base_tratada
+`t08_walk_forward.ipynb` e `walk_forward.py` registram o corte cronológico,
+horizonte e origens elegíveis por base. A configuração atual de origens exige
+alvo e features T06 completos. Hiperparâmetros são escolhidos em validações
+temporais **dentro do treino**; o teste final fica separado. Cada família pode
+ter uma política de reajuste diferente, desde que use apenas informação já
+disponível na origem da previsão.
 
-df, meta = carregar_base_tratada('clima')
-inicio_teste = pd.Timestamp(meta['inicio_teste'])
-# Criar lags e janelas sobre a grade completa de df, antes de excluir NaN.
-# Depois, dividir as features usando índice < ou >= inicio_teste.
-```
+Para comparar diretamente o MAE de dois modelos, use **as mesmas datas e os
+mesmos valores reais**. Os modelos podem usar features diferentes. Se suas
+coberturas diferirem, apresente a cobertura de cada um e compare o MAE na
+interseção das datas; uma comparação em toda a grade requer previsões dos
+modelos em todas as origens escolhidas. `comparacao-20-modelos.ipynb` mostra a
+consolidação parcial e só calcula o ranking final quando houver resultados
+comparáveis dos quatro modelos por base.
 
-O carregador confere o hash do Excel e a regularidade temporal. Os três
-notebooks do grupo 4 (`sarimax-4.ipynb`, `random-forest-4.ipynb` e
-`mlp-regressor-4.ipynb`) e os quatro templates já consomem essa interface.
-Nos templates, escolha `BASE_NAME`; ao copiá-los, use `modelo-grupo.ipynb`.
-Os templates ainda exigem suas tarefas de modelagem, sobretudo o Holt-Winters,
-cujo ajuste em séries com lacunas precisa ser definido na T09.
+## Estado dos modelos neste repositório
 
-`grupo1/holt-winters-1.ipynb`, incorporado da `main`, preserva uma análise
-**mensal exploratória** do Bitcoin a partir do Excel tratado. Seus resultados
-não substituem o pipeline diário 70%/30% definido para o Grupo 1; essa
-adaptação de T09 permanece pendente.
+| Modelo | Notebooks específicos | Situação para a comparação final |
+|---|---|---|
+| Random Forest | `random-forest-1.ipynb` a `random-forest-5.ipynb`, em `grupo1/` a `grupo5/` | Cinco execuções com busca temporal, teste e métricas. Há experimentos de cobertura adicionais nos grupos 2 e 3. |
+| Holt-Winters | `grupo1/holt-winters-1.ipynb` | Protótipo mensal de Bitcoin; ainda precisa do protocolo diário comum. Grupos 2–5 sem pipeline concluído. |
+| SARIMAX | `grupo4/sarimax-4.ipynb` | Execução exploratória com tratamento próprio da fonte. Alvo e datas coincidem com o Excel comum, mas a preparação das exógenas difere; falta reproduzir o fluxo T01 comum. Grupos 1–3 e 5 sem pipeline concluído. |
+| MLP Regressor | `grupo4/mlp-regressor-4.ipynb` | Código em preparação, sem execução final salva. Grupos 1–3 e 5 sem pipeline concluído. |
 
-### Regras e limites do tratamento
+O RF usa um modelo ajustado no treino e atualiza as **entradas** a cada previsão
+de um passo; isso é avaliação de origem móvel, sem reajustar a floresta a cada
+hora. O SARIMAX exploratório do grupo 4 faz reajustes periódicos. O Holt-Winters
+mensal do grupo 1 não deve ser colocado no ranking diário.
 
-- Datas inválidas são removidas e contadas; datas válidas ficam em ordem.
-- Duplicatas exatas são removidas. Em timestamps repetidos, preserva-se a
-  primeira linha inteira, com ordem estável. Alvos conflitantes no mesmo
-  instante ficam ausentes e são contados, evitando escolher um valor arbitrário.
-- Sentinelas `-9999`, infinitos e valores negativos em grandezas não negativas
-  viram ausentes. Em tráfego, temperaturas em Kelvin menores ou iguais a zero
-  também viram ausentes; ausência de feriado vira `No Holiday`.
-- Clima é agregado por hora: médias, máximo de `max. wv (m/s)` e direção
-  circular via seno/cosseno. A hora é rotulada pelo início, intervalo fechado
-  à esquerda. As medições só ficam disponíveis ao término desse intervalo.
-- Ouro converte `.` em ausente e usa o último preço numérico da semana
-  `W-FRI`. A última semana pode conter apenas parte dos dias. A origem oficial
-  da adaptação segue pendente do link; foi usada a base local do grupo.
-- Bitcoin mantém o horário UTC da fonte, sem timezone no Excel. Os campos
-  `timeClose`, `timeHigh` e `timeLow` não entram na tabela de modelagem.
-- A grade completa é preservada. O alvo **nunca é imputado**. Exógenas podem
-  receber o último valor passado por até 6 horas ou 1 dia, conforme a base.
-  Ausências remanescentes ficam em branco, com indicadores explícitos.
-- Um Excel tratado pode conter ausências reais. Elas não são convertidas em
-  zero; não se pode remover datas antes dos lags e comprimir o tempo. Cada
-  modelo deve selecionar exemplos elegíveis e avaliar apenas alvos observados.
-- O split é cronológico, calculado sobre a grade completa: `int(n * treino)`.
-  O corte registrado permanece o mesmo após a criação das features. Em
-  previsão de um passo, usar observações anteriores do teste como lags é
-  permitido somente quando já estariam disponíveis na origem da previsão.
-- Normalização, encoding e imputações estatísticas permanecem no treino de
-  cada janela. Medições contemporâneas continuam exigindo defasagem, conforme
-  os dicionários. Valores extremos plausíveis permanecem para decisão na T03.
+Os perfis reduzidos de features nos grupos 2 e 3 são **experimentos** dentro dos
+respectivos notebooks. Eles mostram validação temporal, MAE nas datas comuns,
+MAE nas datas adicionais e cobertura. O perfil reduzido de poluição também tem
+uma busca completa própria de hiperparâmetros. Esses perfis ainda não mudam as
+origens oficiais T08 nem os resultados da consolidação T16.
 
-O diagnóstico das fontes e o resumo dos Excel tratados ficam no notebook
-`preparar-bases.ipynb`; os detalhes também constam nos metadados dos Excel.
+## Onde começar
 
-## Validação das bases
+1. Abra `preparar-bases.ipynb` para entender as cinco fontes e os Excel tratados.
+2. Leia `t08_walk_forward.ipynb` para conferir cortes, horizonte e origens.
+3. Abra o notebook `modelo-grupo.ipynb` para ver busca, previsão, métricas e gráficos.
+4. Consulte `comparacao-20-modelos.ipynb` para o andamento da comparação.
 
-O arquivo `validacao_bases.py` centraliza o carregamento e as verificações das
-fontes originais de:
-
-- valores nulos;
-- linhas e datas duplicadas;
-- datas inválidas e ordenação cronológica;
-- frequência regular, respeitando a periodicidade própria de cada base.
-
-Uso em notebook ou script:
-
-```python
-from validacao_bases import (
-    relatorios_como_dataframe,
-    validar_todas_bases,
-)
-
-# Valida diretamente as cinco bases originais, sem copiá-las.
-relatorios = validar_todas_bases()
-resumo = relatorios_como_dataframe(relatorios)
-display(resumo)
-```
-
-A validação é somente leitura: os dados brutos não são corrigidos ou alterados
-automaticamente. A preparação dos Excel tratados fica em `preparacao_bases.py`.
-
-As granularidades de modelagem adotadas são: diária para Bitcoin, horária para
-tráfego, poluição e clima, e semanal (fechamento na sexta-feira) para ouro.
-
-### Dicionários de dados e prevenção de leakage
-
-Cada grupo possui um `DICIONARIO_DADOS.md` com o significado e a unidade das
-colunas, cobertura temporal, momento de disponibilidade das exógenas e regras
-para impedir que informações futuras entrem no treinamento:
-
-- `grupo1/DICIONARIO_DADOS.md` — Bitcoin;
-- `grupo2/DICIONARIO_DADOS.md` — tráfego;
-- `grupo3/DICIONARIO_DADOS.md` — poluição;
-- `grupo4/DICIONARIO_DADOS.md` — clima;
-- `grupo5/DICIONARIO_DADOS.md` — ouro.
-
-A convenção adotada é previsão de um passo à frente antes do início do período
-alvo. Medições realizadas dentro do período previsto entram apenas com
-defasagem; calendário e eventos conhecidos antecipadamente podem ser usados no
-próprio período.
-
-### Integração com os notebooks-base
-
-Os quatro arquivos de `notebooks-base/` já estão conectados às tarefas T01 e
-T02. Ao copiar um template para o trabalho do grupo, defina `BASE_NAME` como uma
-das opções abaixo:
-
-```python
-BASE_NAME = "bitcoin"  # bitcoin, trafego, poluicao, clima ou ouro
-```
-
-A célula T01 localiza a raiz do projeto, carrega a base e exibe o relatório
-sanitário. A célula T02 encontra e renderiza automaticamente o
-`DICIONARIO_DADOS.md` do mesmo grupo.
+Os notebooks guardam as saídas no próprio arquivo; não há uma pasta separada de
+resultados ou figuras. Ao ajustar um modelo, registre a cobertura e as datas da
+avaliação junto ao MAE.
