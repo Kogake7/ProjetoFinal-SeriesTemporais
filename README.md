@@ -52,7 +52,10 @@ coberturas diferirem, apresente a cobertura de cada um e compare o MAE na
 interseção das datas; uma comparação em toda a grade requer previsões dos
 modelos em todas as origens escolhidas. `comparacao-20-modelos.ipynb` contém o
 ranking dos quatro modelos por base, recalculado a partir de previsões datadas
-guardadas nos próprios notebooks. O fluxo de produção, a cobertura, o ranking
+guardadas nos próprios notebooks para os grupos 1, 2, 3 e 5. No grupo 4,
+o MAE do SARIMAX está salvo no notebook e suas datas de teste foram conferidas,
+mas falta guardar as previsões datadas para a checagem automática completa.
+O fluxo de produção, a cobertura, o ranking
 e as ressalvas estão detalhados em `GUIA_PRODUCAO_E_STATUS.md`.
 
 ## Estado dos modelos neste repositório

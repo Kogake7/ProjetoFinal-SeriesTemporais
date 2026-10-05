@@ -45,17 +45,21 @@ código de cada notebook.
 
 **A comparação entre os quatro modelos de uma base usa a interseção exata das
 datas previstas.** Cada notebook guarda `data`, `real` e `previsto` em uma saída
-compactada dentro do próprio `.ipynb`. `comparacao-20-modelos.ipynb` descompacta
-essas séries, confere as datas oficiais T08, confronta os valores reais com o
-Excel tratado, faz a interseção e recalcula cada MAE nesse mesmo recorte. Também
-confere que o MAE reconstruído corresponde ao valor salvo no notebook de origem.
+compactada dentro do próprio `.ipynb`, com exceção do SARIMAX 4, cuja série
+datada ainda precisa ser salva. `comparacao-20-modelos.ipynb` descompacta as
+séries disponíveis, confere as datas oficiais T08, confronta os valores reais
+com o Excel tratado, faz a interseção e recalcula cada MAE nesse mesmo recorte.
+Também confere que o MAE reconstruído corresponde ao valor salvo no notebook
+de origem. Essa conferência está completa para os grupos 1, 2, 3 e 5.
 Contagens iguais, por si só, não bastam para declarar datas iguais. Não se
 comparam MAEs de bases diferentes, pois alvos e unidades diferem.
 
 ## 3. Ranking por base
 
 Os MAEs abaixo são calculados nas **mesmas datas entre os quatro modelos da
-respectiva base**. Menor MAE é melhor. Os cinco grupos cobrem todas as origens
+respectiva base**. Menor MAE é melhor. No clima, a ordem usa o MAE salvo do
+SARIMAX 4 nas 13.785 datas oficiais; sua reprodução datada ainda precisa ser
+incorporada ao notebook. Os cinco grupos cobrem todas as origens
 T08 elegíveis; a cobertura percentual é em relação à grade completa do teste,
 que pode conter alvos e features ausentes. A tabela detalhada, com datas de
 início/fim e todos os MAEs, está em `comparacao-20-modelos.ipynb`.

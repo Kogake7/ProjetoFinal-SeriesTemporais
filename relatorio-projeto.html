@@ -157,7 +157,7 @@
         <article class="card"><div class="icon">02</div><h3>Regra de ouro</h3><p>O teste nunca participa do ajuste. Transformações e atributos usam somente informação disponível até a origem da previsão.</p></article>
         <article class="card"><div class="icon">03</div><h3>Critério comum</h3><p>MAE é a métrica do ranking, calculada na interseção das datas previstas pelos quatro modelos de cada base.</p></article>
       </div>
-      <div class="notice"><strong>Leitura correta:</strong> a comparação usa previsão de um passo e somente a interseção das datas previstas pelos quatro modelos. A cobertura é calculada contra o teste oficial de cada base; as unidades de MAE diferem entre bases.</div>
+      <div class="notice"><strong>Leitura correta:</strong> a comparação usa previsão de um passo e somente a interseção das datas previstas pelos quatro modelos. A checagem automática das previsões datadas está completa em quatro bases; o clima usa o MAE salvo do SARIMAX nas mesmas datas oficiais, com reprodução datada pendente. As unidades de MAE diferem entre bases.</div>
       <div class="flow" aria-label="Fluxo do projeto">
         <div class="step"><b>01</b><strong>Base bruta</strong><p>Data, alvo e variáveis externas.</p></div><div class="step"><b>02</b><strong>Tratamento</strong><p>Frequência, faltantes e consistência.</p></div><div class="step"><b>03</b><strong>Diagnóstico</strong><p>Tendência, sazonalidade e ACF.</p></div><div class="step"><b>04</b><strong>Validação</strong><p>Corte cronológico e walk-forward.</p></div><div class="step"><b>05</b><strong>Modelagem</strong><p>Quatro abordagens complementares.</p></div><div class="step"><b>06</b><strong>Avaliação</strong><p>MAE, resíduos e comparação justa.</p></div>
       </div>
@@ -216,15 +216,16 @@
           <p class="muted" style="font-size:.78rem">As quatro barras usam exatamente as mesmas observações dentro de cada base. Compare os valores dentro da base, pois as unidades diferem entre bases.</p>
         </div>
       </div>
-      <div class="notice"><strong>Comparação justa:</strong> a interseção cobre 884/884 datas em Bitcoin, 10.267/10.511 em Tráfego, 6.336/7.013 em Poluição, 13.785/14.026 em Clima e 601/601 em Ouro. As lacunas fora dessa interseção não entram em nenhum MAE do ranking.</div>
+      <div class="notice"><strong>Comparação justa:</strong> a interseção cobre 884/884 datas em Bitcoin, 10.267/10.511 em Tráfego, 6.336/7.013 em Poluição, 13.785/14.026 em Clima e 601/601 em Ouro. As lacunas fora dessa interseção não entram em nenhum MAE do ranking. No clima, o MAE do SARIMAX ainda depende da saída salva no notebook, e a reprodução independente encontrou 0,4118 contra 0,4122 salvo; a posição permanece a mesma.</div>
       <h3 class="subsection-title">Ranking consolidado · MAE na interseção</h3>
       <div class="matrix-wrap"><table><thead><tr><th>Base</th><th>Datas comuns</th><th>1º</th><th>2º</th><th>3º</th><th>4º</th></tr></thead><tbody>
         <tr><td>Bitcoin</td><td>884 (100%)</td><td>SARIMAX · 1.391,90</td><td>MLP · 1.401,83</td><td>Holt-Winters · 1.404,19</td><td>RF · 1.661,42</td></tr>
         <tr><td>Tráfego</td><td>10.267 (97,68%)</td><td>RF · 153,29</td><td>MLP · 180,41</td><td>Holt-Winters · 332,70</td><td>SARIMAX · 351,88</td></tr>
         <tr><td>Poluição</td><td>6.336 (90,35%)</td><td>RF · 9,87</td><td>Holt-Winters · 10,39</td><td>MLP · 10,69</td><td>SARIMAX · 32,22</td></tr>
-        <tr><td>Clima</td><td>13.785 (98,28%)</td><td>MLP · 0,3821</td><td>RF · 0,3951</td><td>SARIMAX · 0,4122</td><td>Holt-Winters · 0,6866</td></tr>
+        <tr><td>Clima*</td><td>13.785 (98,28%)</td><td>MLP · 0,3821</td><td>RF · 0,3951</td><td>SARIMAX · 0,4122*</td><td>Holt-Winters · 0,6866</td></tr>
         <tr><td>Ouro</td><td>601 (100%)</td><td>SARIMAX · 19,51</td><td>Holt-Winters · 19,57</td><td>MLP · 22,65</td><td>RF · 36,16</td></tr>
       </tbody></table></div>
+      <p class="muted" style="font-size:.76rem;margin-top:10px">* Clima: posição do SARIMAX baseada no MAE salvo e nas datas oficiais conferidas. Falta guardar suas previsões datadas para a auditoria automática.</p>
       <h3 class="subsection-title">Leitura consolidada por base</h3>
       <div class="reading-grid">
         <article class="reading-card"><b>Bitcoin</b><strong>SARIMAX</strong><span>MAE 1.391,90; MLP e Holt-Winters estão próximos.</span></article>
