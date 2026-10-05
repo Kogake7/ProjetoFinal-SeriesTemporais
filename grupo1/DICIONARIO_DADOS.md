@@ -62,3 +62,16 @@ problema de previsão e a comparação entre modelos.
   mínima do mesmo dia previsto.
 - **Pendente:** confirmar ativo/par, moeda, fuso e unidade de volume na fonte.
 
+## Configuração atual do modelo
+
+- Fonte: Bitget — https://www.bitget.com/price/bitcoin/historical-data
+- Random State: 42
+- Treino-teste: 70% / 30%, cronológico, sem embaralhamento.
+- Horizonte: 1 passo.
+
+As tabelas acima dizem o que é **permitido** pela disponibilidade temporal. Abaixo está o que está **selecionado** em `features_temporais.py` (`configuracao_features`):
+
+- Alvo: lags 1, 2, 3, 7, 14 e 28 dias; médias e desvios móveis de 7, 14 e 28 dias, calculados até `t-1`.
+- Exógenas defasadas (lags 1 e 7): `priceOpen`, `priceHigh`, `priceLow`, `volume`.
+- Calendário em `t`: dia da semana e dia do ano (seno/cosseno).
+- Fora da seleção atual: `timeClose`, `timeHigh`, `timeLow` (permitidos defasados, mas não usados).

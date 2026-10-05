@@ -42,12 +42,12 @@ def configuracao_features(nome: str) -> ConfiguracaoFeatures:
         'trafego': ConfiguracaoFeatures(
             (1, 2, 3, 24, 48, 168),
             {c: (1, 24) for c in ('temp', 'rain_1h', 'snow_1h', 'clouds_all')},
-            (6, 24, 168), comum_horario, {'holiday': 'No Holiday'}),
+            (6,), comum_horario, {'holiday': 'No Holiday'}),
         'poluicao': ConfiguracaoFeatures(
             (1, 2, 3, 6, 12, 24, 48, 168),
             {c: (1, 24) for c in ('PM10', 'SO2', 'NO2', 'CO', 'O3',
                                    'TEMP', 'PRES', 'DEWP', 'RAIN', 'WSPM')},
-            (6, 24, 168), comum_horario, {}),
+            (6,), comum_horario, {}),
         'clima': ConfiguracaoFeatures(
             (1, 2, 3, 6, 12, 24, 48, 168),
             {c: (1, 24) for c in ('p (mbar)', 'rh (%)', 'wv (m/s)',

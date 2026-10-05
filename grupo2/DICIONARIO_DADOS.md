@@ -73,3 +73,16 @@ simula informação perfeita e superestima o desempenho.
   de versões e horário de emissão.
 - **Bloqueadas:** clima realizado e volume de tráfego da própria hora-alvo.
 
+## Configuração atual do modelo
+
+- Fonte: UCI 492 — https://archive.ics.uci.edu/dataset/492/metro+interstate+traffic+volume
+- Random State: 67
+- Treino-teste: 80% / 20%, cronológico, sem embaralhamento.
+- Horizonte: 1 passo.
+
+As tabelas acima dizem o que é **permitido** pela disponibilidade temporal. Abaixo está o que está **selecionado** em `features_temporais.py` (`configuracao_features`):
+
+- Alvo: lags 1, 2, 3, 24, 48 e 168 horas; janelas móveis de 6, 24 e 168 horas até `t-1`.
+- Exógenas defasadas (lags 1 e 24): `temp`, `rain_1h`, `snow_1h`, `clouds_all`.
+- Em `t`: indicador de feriado (`holiday`, referência `No Holiday`), hora, dia da semana e dia do ano.
+- Fora da seleção atual: `weather_main` e `weather_description` (exigiriam encoding ajustado no treino).
