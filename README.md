@@ -52,15 +52,16 @@ coberturas diferirem, apresente a cobertura de cada um e compare o MAE na
 interseção das datas; uma comparação em toda a grade requer previsões dos
 modelos em todas as origens escolhidas. `comparacao-20-modelos.ipynb` mostra a
 consolidação parcial e só calcula o ranking final quando houver resultados
-comparáveis dos quatro modelos por base.
+comparáveis dos quatro modelos por base. O fluxo de produção, os MAEs salvos e
+as pendências estão detalhados em `GUIA_PRODUCAO_E_STATUS.md`.
 
 ## Estado dos modelos neste repositório
 
 | Modelo | Notebooks específicos | Situação para a comparação final |
 |---|---|---|
 | Random Forest | `random-forest-1.ipynb` a `random-forest-5.ipynb`, em `grupo1/` a `grupo5/` | Cinco execuções com busca temporal, teste e métricas. Há experimentos de cobertura adicionais nos grupos 2 e 3. |
-| Holt-Winters | `holt-winters-1.ipynb` a `holt-winters-5.ipynb` | Cinco notebooks executados, mas avaliam blocos de 30 dias, 168 horas ou 13 semanas. O protocolo comum é de um passo. Os resultados atuais servem como estudo de horizonte múltiplo, não para o ranking dos quatro modelos. Nas bases horárias, a interpolação da série inteira antes das origens também precisa ser substituída por atualização causal. |
-| SARIMAX | `sarimax-1.ipynb` a `sarimax-5.ipynb` | Cinco notebooks executados. Grupos 2 e 3 têm MAEs exploratórios em 7.720/10.267 e 3.023/6.336 origens oficiais, respectivamente; ambos comprimem lacunas da série e ainda não são comparáveis. O grupo 4 agora lê o Excel tratado, mas seus ajustes ainda registram avisos de não convergência. |
+| Holt-Winters | `holt-winters-1.ipynb` a `holt-winters-5.ipynb` | Cinco avaliações de um passo estão salvas. O estudo anterior de vários passos continua como análise adicional. O commit recente da `main` corrigiu a preparação causal por origem nesse estudo. Suas seções dos grupos 3 e 4 ainda têm execução parcial. |
+| SARIMAX | `sarimax-1.ipynb` a `sarimax-5.ipynb` | Grupos 2 e 3 agora têm avaliação de um passo na grade completa, cobrindo 10.267 e 6.336 origens. Seus resultados anteriores, em séries com lacunas comprimidas, são exploratórios. O grupo 4 lê o Excel tratado, mas seus ajustes ainda registram avisos de não convergência. |
 | MLP Regressor | `mlp-regressor-1.ipynb` a `mlp-regressor-5.ipynb` | Cinco notebooks integrados da `main` e executados na `dev`. Os grupos 1 e 5 preveem a variação sobre o último valor observado para lidar com a tendência dos preços. |
 
 As revisões dos MLPs 1 e 5 foram feitas após inspecionar o erro no teste.
@@ -69,8 +70,9 @@ os hiperparâmetros de cada revisão continuam selecionados nos folds do treino.
 
 O RF usa um modelo ajustado no treino e atualiza as **entradas** a cada previsão
 de um passo; isso é avaliação de origem móvel, sem reajustar a floresta a cada
-hora. O SARIMAX do grupo 4 faz reajustes periódicos. As avaliações atuais de
-Holt-Winters respondem a horizontes maiores e não entram no ranking de um passo.
+hora. O SARIMAX do grupo 4 faz reajustes periódicos. As seções novas de
+Holt-Winters respondem ao horizonte de um passo; suas análises anteriores de
+vários passos não entram nesse ranking.
 
 Os perfis reduzidos de features nos grupos 2 e 3 são **experimentos** dentro dos
 respectivos notebooks. Eles mostram validação temporal, MAE nas datas comuns,
