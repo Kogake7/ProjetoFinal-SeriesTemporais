@@ -60,7 +60,7 @@ comparáveis dos quatro modelos por base.
 |---|---|---|
 | Random Forest | `random-forest-1.ipynb` a `random-forest-5.ipynb`, em `grupo1/` a `grupo5/` | Cinco execuções com busca temporal, teste e métricas. Há experimentos de cobertura adicionais nos grupos 2 e 3. |
 | Holt-Winters | `holt-winters-1.ipynb` a `holt-winters-5.ipynb` | Cinco notebooks executados, mas avaliam blocos de 30 dias, 168 horas ou 13 semanas. O protocolo comum é de um passo. Os resultados atuais servem como estudo de horizonte múltiplo, não para o ranking dos quatro modelos. Nas bases horárias, a interpolação da série inteira antes das origens também precisa ser substituída por atualização causal. |
-| SARIMAX | `sarimax-1.ipynb` a `sarimax-5.ipynb` | Grupos 1, 4 e 5 executados. O grupo 2 tem MAE exploratório em 7.720 horas, mas comprime lacunas da série e cobre menos datas que T08; não é comparável ainda. O grupo 3 não foi executado e exige a mesma correção temporal. O grupo 4 usa preparação própria das exógenas e teve avisos de não convergência. |
+| SARIMAX | `sarimax-1.ipynb` a `sarimax-5.ipynb` | Cinco notebooks executados. Grupos 2 e 3 têm MAEs exploratórios em 7.720/10.267 e 3.023/6.336 origens oficiais, respectivamente; ambos comprimem lacunas da série e ainda não são comparáveis. O grupo 4 agora lê o Excel tratado, mas seus ajustes ainda registram avisos de não convergência. |
 | MLP Regressor | `mlp-regressor-1.ipynb` a `mlp-regressor-5.ipynb` | Cinco notebooks integrados da `main` e executados na `dev`. Os grupos 1 e 5 preveem a variação sobre o último valor observado para lidar com a tendência dos preços. |
 
 As revisões dos MLPs 1 e 5 foram feitas após inspecionar o erro no teste.
