@@ -89,6 +89,8 @@ origens oficiais T08 nem os resultados da consolidação T16.
 2. Leia `t08_walk_forward.ipynb` para conferir cortes, horizonte e origens.
 3. Abra o notebook `modelo-grupo.ipynb` para ver busca, previsão, métricas e gráficos.
 4. Consulte `comparacao-20-modelos.ipynb` para o ranking por datas comuns.
+5. Para apresentar o HTML em cinco pessoas, use
+   `ROTEIRO_APRESENTACAO_5_PESSOAS.md`, com a divisão de falas e passagens.
 
 Os notebooks guardam as saídas no próprio arquivo; não há uma pasta separada de
 resultados ou figuras. Ao ajustar um modelo, registre a cobertura e as datas da
