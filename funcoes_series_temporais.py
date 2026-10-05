@@ -9,6 +9,7 @@ import pandas as pd
 from sklearn.inspection import permutation_importance
 from statsmodels.stats.diagnostic import acorr_ljungbox
 from statsmodels.tsa.seasonal import STL
+import matplotlib.pyplot as plt
 
 
 def _validar_dataframe_features(X: pd.DataFrame) -> None:
@@ -136,7 +137,6 @@ def calcular_importancia_features(
 
     return tabela.sort_values("importancia", ascending=False).reset_index(drop=True)
 
-
 def calcular_forca_sazonalidade(serie: pd.Series, periodo: int, robust: bool = True,) -> dict[str, Any]:
     """Calcula a força da sazonalidade e retorna a decomposição STL."""
     serie = pd.Series(serie).dropna().astype(float)
@@ -173,7 +173,6 @@ def calcular_forca_sazonalidade(serie: pd.Series, periodo: int, robust: bool = T
         "decomposicao": decomposicao,
     }
 
-
 def analisar_componente_residual(
     decomposicao: Any,
     lags: int = 24,
@@ -196,4 +195,4 @@ __all__ = [
     "analisar_componente_residual",
     "calcular_forca_sazonalidade",
     "calcular_importancia_features",
-]
+]   
