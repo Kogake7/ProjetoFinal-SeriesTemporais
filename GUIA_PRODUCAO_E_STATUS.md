@@ -43,28 +43,38 @@ O Random Forest e o MLP atualizam as entradas em cada origem sem necessariamente
 reajustar seus pesos; Holt-Winters e SARIMAX atualizam seus estados conforme o
 código de cada notebook.
 
-O MAE de um modelo em seu teste individual mede seu desempenho naquela
-cobertura. **A comparação entre os quatro modelos de uma base exige recalcular
-os quatro MAEs na interseção exata das datas previstas.**
-`comparacao-20-modelos.ipynb` só calcula esse ranking quando encontra, nos
-quatro notebooks da base, as séries completas com `data`, `real` e `previsto`.
-Contagens iguais de previsões não provam datas iguais. Não se comparam MAEs de
-bases diferentes, pois alvos e unidades diferem.
+**A comparação entre os quatro modelos de uma base usa a interseção exata das
+datas previstas.** Cada notebook guarda `data`, `real` e `previsto` em uma saída
+compactada dentro do próprio `.ipynb`. `comparacao-20-modelos.ipynb` descompacta
+essas séries, confere as datas oficiais T08, confronta os valores reais com o
+Excel tratado, faz a interseção e recalcula cada MAE nesse mesmo recorte. Também
+confere que o MAE reconstruído corresponde ao valor salvo no notebook de origem.
+Contagens iguais, por si só, não bastam para declarar datas iguais. Não se
+comparam MAEs de bases diferentes, pois alvos e unidades diferem.
 
-## 3. Estado por base
+## 3. Ranking por base
 
-Os números abaixo são **MAEs individuais salvos**; não constituem o ranking
-final na interseção. `n` é a contagem declarada na avaliação individual. Os
-resultados de Holt-Winters são da nova seção de um passo. Nos grupos 2 e 3, os
-resultados SARIMAX são da nova seção na grade horária completa.
+Os MAEs abaixo são calculados nas **mesmas datas entre os quatro modelos da
+respectiva base**. Menor MAE é melhor. Os cinco grupos cobrem todas as origens
+T08 elegíveis; a cobertura percentual é em relação à grade completa do teste,
+que pode conter alvos e features ausentes. A tabela detalhada, com datas de
+início/fim e todos os MAEs, está em `comparacao-20-modelos.ipynb`.
 
-| Base | Random Forest | Holt-Winters | SARIMAX | MLP Regressor | n declarado |
-|---|---:|---:|---:|---:|---:|
-| 1 — Bitcoin | 1661,4218 | 1404,1918 | 1391,9008 | 1401,8277 | 884 |
-| 2 — Tráfego | 153,2877 | 332,7024 | 351,8835 | 180,4071 | 10.267 |
-| 3 — Poluição | 9,8670 | 10,3912 | 32,2177 | 10,6862 | 6.336 |
-| 4 — Clima | 0,3950 | 0,6866 | 0,4122 | 0,3821 | 13.785 |
-| 5 — Ouro | 36,1629 | 19,5735 | 19,5104 | 22,6521 | 601 |
+| Base | 1º | 2º | 3º | 4º | Datas comuns | Cobertura da grade |
+|---|---|---|---|---|---:|---:|
+| Bitcoin | SARIMAX 1391,9008 | MLP 1401,8277 | Holt-Winters 1404,1918 | Random Forest 1661,4218 | 884 | 100% |
+| Tráfego | Random Forest 153,2877 | MLP 180,4071 | Holt-Winters 332,7024 | SARIMAX 351,8835 | 10.267 | 97,68% |
+| Poluição | Random Forest 9,8670 | Holt-Winters 10,3912 | MLP 10,6862 | SARIMAX 32,2177 | 6.336 | 90,35% |
+| Clima | MLP 0,3821 | Random Forest 0,3950 | SARIMAX 0,4122 | Holt-Winters 0,6866 | 13.785 | 98,28% |
+| Ouro | SARIMAX 19,5104 | Holt-Winters 19,5735 | MLP 22,6521 | Random Forest 36,1629 | 601 | 100% |
+
+No Bitcoin, a vantagem do SARIMAX sobre o MLP é pequena (aproximadamente
+0,71% do MAE do segundo colocado); no ouro, a vantagem sobre Holt-Winters é
+aproximadamente 0,32%. O ranking ordena o erro observado, sem demonstrar que
+essas pequenas diferenças seriam estáveis em outro período. Nos grupos 1 e 5,
+o MLP foi revisado após inspeção do teste, então sua posição é exploratória.
+O SARIMAX 4 tem avisos de não convergência: a posição dele descreve o ajuste
+salvo, sem comprovar estabilidade dos parâmetros.
 
 ### Random Forest
 
@@ -105,8 +115,7 @@ a grade horária, tratam o alvo ausente como ausência, fazem seleção no trein
 e avaliam as 10.267 e 6.336 origens. No grupo 3, o MAE novo é bem pior que a
 referência de persistência (32,2177 contra 10,3906); isso deve ser discutido,
 não escondido. No grupo 4, ainda há avisos de convergência a investigar antes
-de considerar o ajuste estabilizado. Os grupos 1, 4 e 5 já têm MAE salvo,
-mas ainda faltam suas séries completas de previsões para a comparação final.
+de considerar o ajuste estabilizado.
 
 ### MLP Regressor
 
@@ -114,19 +123,15 @@ Os cinco notebooks estão presentes e têm avaliação salva. Nos grupos 1 e 5,
 o modelo foi revisado depois de o erro do teste ter sido visto. Por isso,
 esses MAEs são **exploratórios**: a escolha de hiperparâmetros dentro do treino
 não apaga o uso do teste para decidir a revisão. O relatório deve explicitar
-essa limitação. Ainda faltam séries completas de previsões incorporadas às
-saídas dos notebooks para verificar a interseção de datas.
+essa limitação.
 
 ## 4. O que falta para fechar a entrega
 
 1. Reproduzir integralmente as seções antigas de Holt-Winters 3 e 4, ou
    apresentar apenas as seções de um passo já executadas.
-2. Incorporar `data`, `real` e `previsto` para RF, MLP e SARIMAX 1/4/5 nos
-   próprios notebooks. Em seguida, executar `comparacao-20-modelos.ipynb` e
-   usar **somente o MAE recalculado na interseção** no ranking final.
-3. Investigar a convergência do SARIMAX 4 e registrar se o ajuste escolhido é
+2. Investigar a convergência do SARIMAX 4 e registrar se o ajuste escolhido é
    estável. Explicar o desempenho do SARIMAX 3 frente à persistência.
-4. No relatório e na apresentação, separar resultados oficiais de um passo dos
+3. No relatório e na apresentação, separar resultados de um passo dos
    estudos multipasso e exploratórios; incluir cobertura, datas, gráficos de
    previsão e erro, resíduos, importância de features e limitações.
 
@@ -137,6 +142,8 @@ cinco bases, execute `python preparacao_bases.py --sobrescrever`. Abra cada
 notebook `grupoN/modelo-N.ipynb` e use **Restart & Run All**. Os notebooks de
 Holt-Winters têm uma seção de um passo autônoma ao final; execute-a mesmo se
 interromper o estudo multipasso anterior. Depois execute
-`comparacao-20-modelos.ipynb` e confira sua tabela de pendências. Nunca use a
-tabela de MAEs individuais como ranking enquanto houver pendências de séries
-completas.
+`comparacao-20-modelos.ipynb`. Ele relê as séries compactadas nas saídas dos
+notebooks e refaz o ranking; se faltar alguma série, mostra a pendência em vez
+de produzir uma colocação parcial para aquela base. Para atualizar um modelo,
+execute novamente também a célula final que incorpora suas previsões no
+notebook antes de refazer a comparação.

@@ -50,10 +50,10 @@ Para comparar diretamente o MAE de dois modelos, use **as mesmas datas e os
 mesmos valores reais**. Os modelos podem usar features diferentes. Se suas
 coberturas diferirem, apresente a cobertura de cada um e compare o MAE na
 interseção das datas; uma comparação em toda a grade requer previsões dos
-modelos em todas as origens escolhidas. `comparacao-20-modelos.ipynb` mostra a
-consolidação parcial e só calcula o ranking final quando houver resultados
-comparáveis dos quatro modelos por base. O fluxo de produção, os MAEs salvos e
-as pendências estão detalhados em `GUIA_PRODUCAO_E_STATUS.md`.
+modelos em todas as origens escolhidas. `comparacao-20-modelos.ipynb` contém o
+ranking dos quatro modelos por base, recalculado a partir de previsões datadas
+guardadas nos próprios notebooks. O fluxo de produção, a cobertura, o ranking
+e as ressalvas estão detalhados em `GUIA_PRODUCAO_E_STATUS.md`.
 
 ## Estado dos modelos neste repositório
 
@@ -85,7 +85,7 @@ origens oficiais T08 nem os resultados da consolidação T16.
 1. Abra `preparar-bases.ipynb` para entender as cinco fontes e os Excel tratados.
 2. Leia `t08_walk_forward.ipynb` para conferir cortes, horizonte e origens.
 3. Abra o notebook `modelo-grupo.ipynb` para ver busca, previsão, métricas e gráficos.
-4. Consulte `comparacao-20-modelos.ipynb` para o andamento da comparação.
+4. Consulte `comparacao-20-modelos.ipynb` para o ranking por datas comuns.
 
 Os notebooks guardam as saídas no próprio arquivo; não há uma pasta separada de
 resultados ou figuras. Ao ajustar um modelo, registre a cobertura e as datas da
