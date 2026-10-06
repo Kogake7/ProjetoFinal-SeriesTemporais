@@ -91,6 +91,8 @@ origens oficiais T08 nem os resultados da consolidação T16.
 4. Consulte `comparacao-20-modelos.ipynb` para o ranking por datas comuns.
 5. Para apresentar o HTML em cinco pessoas, use
    `ROTEIRO_APRESENTACAO_5_PESSOAS.md`, com a divisão de falas e passagens.
+6. Para interpretar testes, resíduos, viés, sazonalidade e limites das
+   conclusões, leia `ANALISE_DIAGNOSTICA_RESULTADOS.md`.
 
 Os notebooks guardam as saídas no próprio arquivo; não há uma pasta separada de
 resultados ou figuras. Ao ajustar um modelo, registre a cobertura e as datas da

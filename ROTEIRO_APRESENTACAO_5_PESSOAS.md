@@ -10,6 +10,8 @@ própria e reserva a Felipe as bases, o método comum e a condução da apresent
 - Abram o HTML localmente e deixem um notebook de cada família disponível caso
   alguém peça detalhes. O HTML concentra os resultados; gráficos de busca,
   importância e diagnóstico mais específicos permanecem nos notebooks.
+- Para preparar respostas sobre resíduos, sazonalidade, viés e limites dos
+  testes, leiam `ANALISE_DIAGNOSTICA_RESULTADOS.md` antes do ensaio.
 - Uma pessoa controla o computador, preferencialmente Felipe. Cliquem nas abas
   da seção **04 Modelos** e nos botões de base da seção **05 Resultados** quando
   o respectivo apresentador pedir. Evitem trocar de base enquanto alguém explica.
